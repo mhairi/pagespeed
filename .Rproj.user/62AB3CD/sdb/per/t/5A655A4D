@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "`%+%` <- function(x, y) paste0(x, y)\n\n#' Get Google Pagespeed Results\n#'\n#' @param url URL to get score for\n#' @param api_key API key from Google\n#' @param strategy The analysis strategy to use, either 'desktop' or 'mobile' (optional)\n#' @return An object of class 'pagespeed_api'\n#' @export\n#'\n#' @examples\\dontrun{\n#' get_pagespeed_api(\"http://finovate.com/blog/\", \"1234\")\n#' }\nget_pagespeed_api <- function(url, api_key, strategy = NULL){\n  get_url <-\n    'https://www.googleapis.com/pagespeedonline/v2/runPagespeed'\n\n  if (!is.null(strategy)){\n    if (!(strategy %in% c('mobile', 'desktop'))) stop(\"Stategy must be 'desktop', 'mobile' or NULL\")\n  }\n\n  parameters <- list(\n    'key' = api_key,\n    'url' = url,\n    'strategy' = strategy\n  )\n\n  parameters <- purrr::discard(parameters, is.null)\n\n  response <- httr::GET(get_url, query = parameters)\n\n  if (httr::http_type(response) != \"application/json\") {\n    stop(\"API did not return json\", call. = FALSE)\n  }\n\n  httr::stop_for_status(response)\n\n  content <- httr::content(response, type = 'text', encoding = 'utf-8')\n  parsed  <- jsonlite::fromJSON(content, simplifyVector = FALSE)\n\n  structure(\n    list(\n      content     = parsed,\n      response    = response,\n      raw_content = content\n    ),\n    class = \"pagespeed_api\"\n  )\n}\n\n#' Convert a Google Pagespeed Object to a dataframe\n#'\n#' @param pagespeed_api A object of class 'pagespeed_api';\n#' normally returned from `get_pagespeed_api`.\n#'\n#' @return A dataframe\n#' @export\n#'\n#' @examples\n#' @examples \\dontrun{\n#' pagespeed_as_dataframe(get_pagespeed_api(\"http://finovate.com/blog/\", \"1234\"))\n#' }\npagespeed_as_dataframe <- function(pagespeed_api){\n\n  df <- as.data.frame(pagespeed_api$content$pageStats)\n\n  df$speed_score <- pagespeed_api$content$ruleGroups$SPEED$score\n\n  return(df)\n}\n\n#' Get Font Size Impact\n#'\n#' @param pagespeed_api A object of class 'pagespeed_api';\n#' normally returned from `get_pagespeed_api`.\n#'\n#' @return A single number, or NA if no data for this rule\n#' @export\n#'\n#' @examples \\dontrun{\n#' pagespeed_font_size_impact(get_pagespeed_api(\"http://finovate.com/blog/\", \"1234\", \"mobile\"))\n#' }\npagespeed_font_size_impact <- function(pagespeed_api){\n  font_size <- pagespeed_api$content$formattedResults$ruleResults$UseLegibleFontSizes\n\n  if (is.null(font_size)) return(NA)\n\n  return(font_size$ruleImpact)\n}\n\n",
+    "created" : 1470688153732.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2742019136",
+    "id" : "5A655A4D",
+    "lastKnownWriteTime" : 1477649250,
+    "last_content_update" : 1477649250016,
+    "path" : "~/Documents/APIs/pagespeed/R/functions.R",
+    "project_path" : "R/functions.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
