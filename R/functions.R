@@ -12,6 +12,12 @@
 #' get_pagespeed_api("http://finovate.com/blog/", "1234")
 #' }
 get_pagespeed_api <- function(url, api_key, strategy = NULL){
+
+  # If the protocol is missing add http as protocol
+  if (!grepl('(?i)http(s)?://.*', url)){
+    url <- paste0('http://', url)
+  }
+
   get_url <-
     'https://www.googleapis.com/pagespeedonline/v2/runPagespeed'
 

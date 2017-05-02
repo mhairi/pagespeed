@@ -1,12 +1,15 @@
 Package: pagespeed
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Google Pagespeed
+Version: 1.0.0
+Author: Mhairi McNeill
+Maintainer: Mhairi McNeill <mhairihmcneill@gmail.com>
+Description: Some of Google Pagespeed API's functionality in easy R form.
+License: 
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
+Suggests: testthat
+Imports: purrr,
+    httr,
+    jsonlite
